@@ -1,0 +1,48 @@
+services:
+  distance-calculate-app:
+    build: .
+    ports:
+      - "8080:8080"
+    container_name: distance-calculate-app
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    links:
+      - mysql-db
+    networks:
+      - distance-calculate-network
+    environment:
+      - MYSQL_HOST=mysql-db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DATABASE=distance_calculate
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: distance_calculate
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: distance_calculate
+
+    volumes:
+      - mysql-data:/var/lib/mysql/data
+    networks:
+      - distance-calculate-network
+
+volumes:
+  mysql-data:
+
+networks:
+  distance-calculate-network:
+    driver: bridge
