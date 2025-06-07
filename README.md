@@ -1,4 +1,4 @@
-# RouteDestinationApp
+# DistanceCalculateApp
 Задача
 Реализовать Spring Boot приложение, которое:
 1. Принимает текстовый адрес через REST API
