@@ -1,9 +1,6 @@
 package com.suraev.routeDestinationApp.entity;
 
-import java.time.Instant;
-
-import com.suraev.routeDestinationApp.dto.Coordinate;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,15 +8,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "coordinate_events")
-public class CoordinateEvent {
+@Table(name = "coordinates")
+public class Coordinate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String sourceAdress;
-    private Coordinate yandexCoordinate;
-    private Coordinate dadataCoordinate;
-    private Instant createdAt;
-    
+    @Column(name = "latitude")
+    private String latitude;
+    @Column(name = "longitude")
+    private String longitude;
 }
-
