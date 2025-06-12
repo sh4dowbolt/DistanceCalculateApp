@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExceptionResponse {
+public class ExceptionResponse extends RuntimeException {
     private Timestamp timestamp;
     private Long status;
     private String error;

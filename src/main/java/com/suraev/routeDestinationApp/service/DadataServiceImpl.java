@@ -6,13 +6,13 @@ import com.suraev.routeDestinationApp.dto.DadataRequest;
 import com.suraev.routeDestinationApp.dto.DadataResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.client.RestClient;
-
 import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 import java.util.List;
+import com.suraev.routeDestinationApp.util.HttpStatusHandler;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Service
@@ -21,6 +21,7 @@ public class DadataServiceImpl implements DadataService {
     private final String ddataUrl;
     private final String apiKey;
     private final String secretKey;
+    private final ObjectMapper objectMapper;
 
     public DadataServiceImpl(
         RestClient restClient,
@@ -32,6 +33,7 @@ public class DadataServiceImpl implements DadataService {
         this.ddataUrl = ddataUrl;
         this.apiKey = apiKey;
         this.secretKey = secretKey;
+        this.objectMapper = new ObjectMapper();
     }
 
     @Override
@@ -48,25 +50,26 @@ public class DadataServiceImpl implements DadataService {
         .header("X-Secret", secretKey)
         .retrieve()
         .onStatus(statusCode -> statusCode.equals(HttpStatus.BAD_REQUEST), (req, response) -> {
-            throw new RuntimeException("Bad Request");
+            HttpStatusHandler.handleStatus(response, objectMapper);
         })
         .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(401)), (req, response) -> {
-            throw new RuntimeException("Unauthorized");
+            HttpStatusHandler.handleStatus(response, objectMapper);
         })
         .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(403)), (req, response) -> {
-            throw new RuntimeException("Not accepted email or you have not enough balance");
+            HttpStatusHandler.handleStatus(response, objectMapper);
         })
         .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(405)), (req, response) -> {
-            throw new RuntimeException("Method not allowed, only POST method is allowed");
+            HttpStatusHandler.handleStatus(response, objectMapper);
         })
         .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(429)), (req, response) -> {
-            throw new RuntimeException("Too many requests, please try again later");
+            HttpStatusHandler.handleStatus(response, objectMapper);
         })
         .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(500)), (req, response) -> {
-            throw new RuntimeException("Internal server error");
+            HttpStatusHandler.handleStatus(response, objectMapper);
         })
         .body(DadataResponse[].class);
 
         return Arrays.asList(responseAll);
     }
+
 }
