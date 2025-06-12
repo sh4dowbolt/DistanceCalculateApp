@@ -11,12 +11,10 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DadataResponse {
 
-   @JsonProperty("geo_lat")
-   private String lattitude;
+    @JsonProperty("geo_lat")
+    private String lattitude;
 
-   @JsonProperty("geo_lon")
-   private String longitude;
-
-    
+    @JsonProperty("geo_lon")
+    private String longitude;
 }
 

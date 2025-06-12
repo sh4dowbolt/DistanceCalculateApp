@@ -1,9 +1,9 @@
 package com.suraev.routeDestinationApp.service;
 
-import com.suraev.routeDestinationApp.dto.YandexRequest;
-import com.suraev.routeDestinationApp.dto.YandexResponse;
+import com.suraev.routeDestinationApp.dto.CoordinateDTO;
 
 public interface YandexMapService {
-    YandexResponse getCoordinates(YandexRequest request);
+    CoordinateDTO getCoordinate(String [] adress);
 
+    
 }

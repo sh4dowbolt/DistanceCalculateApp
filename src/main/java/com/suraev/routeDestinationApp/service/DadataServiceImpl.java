@@ -1,9 +1,9 @@
 package com.suraev.routeDestinationApp.service;
 
 import org.springframework.stereotype.Service;
-
-import com.suraev.routeDestinationApp.dto.DadataRequest;
 import com.suraev.routeDestinationApp.dto.DadataResponse;
+import com.suraev.routeDestinationApp.dto.ExceptionResponse;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.client.RestClient;
 import java.util.Arrays;
@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 import java.util.List;
-import com.suraev.routeDestinationApp.util.HttpStatusHandler;
+import com.suraev.routeDestinationApp.util.ExceptionResponseHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.suraev.routeDestinationApp.dto.BadRequestException;
 
 @Service
 public class DadataServiceImpl implements DadataService {
@@ -36,40 +36,25 @@ public class DadataServiceImpl implements DadataService {
         this.objectMapper = new ObjectMapper();
     }
 
-    @Override
-    public List<DadataResponse> getCoordinate(String[] adresses) {
+        @Override
+        public DadataResponse getCoordinate(String [] adress) throws ExceptionResponse {
 
-        // TODO: check parameters is UTF-8
-      
-        DadataResponse[] responseAll = restClient.post()
+        DadataResponse [] coordinate = restClient.post()
         .uri(ddataUrl)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON)
-        .body(adresses)
+        .body(adress)
         .header("Authorization", "Token " + apiKey)
         .header("X-Secret", secretKey)
         .retrieve()
-        .onStatus(statusCode -> statusCode.equals(HttpStatus.BAD_REQUEST), (req, response) -> {
-            HttpStatusHandler.handleStatus(response, objectMapper);
-        })
-        .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(401)), (req, response) -> {
-            HttpStatusHandler.handleStatus(response, objectMapper);
-        })
-        .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(403)), (req, response) -> {
-            HttpStatusHandler.handleStatus(response, objectMapper);
-        })
-        .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(405)), (req, response) -> {
-            HttpStatusHandler.handleStatus(response, objectMapper);
-        })
-        .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(429)), (req, response) -> {
-            HttpStatusHandler.handleStatus(response, objectMapper);
-        })
-        .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(500)), (req, response) -> {
-            HttpStatusHandler.handleStatus(response, objectMapper);
-        })
+        .onStatus(status -> status.equals(HttpStatus.BAD_REQUEST), (req, res) -> ExceptionResponseHandler.handleStatus(res, objectMapper))
+        .onStatus(status -> status.value() == 401, (req, res) -> ExceptionResponseHandler.handleStatus(res, objectMapper))
+        .onStatus(status -> status.value() == 403, (req, res) -> ExceptionResponseHandler.handleStatus(res, objectMapper))
+        .onStatus(status -> status.value() == 429, (req, res) -> ExceptionResponseHandler.handleStatus(res, objectMapper))
+        .onStatus(status -> status.equals(HttpStatus.INTERNAL_SERVER_ERROR), (req, res) -> ExceptionResponseHandler.handleStatus(res, objectMapper))
         .body(DadataResponse[].class);
-
-        return Arrays.asList(responseAll);
+        
+        return coordinate[0];
     }
 
 }

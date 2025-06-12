@@ -2,30 +2,25 @@ package com.suraev.routeDestinationApp.dto;
 
 import java.sql.Timestamp;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
+import lombok.Getter;
+import lombok.Setter;
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class ExceptionResponse extends RuntimeException {
-    
+public class BadRequestException extends Exception {
     private Timestamp timestamp;
-    private Long status;
-    private String error;
+    private HttpStatus status;
     private String message;
     private String path;
 
-    public ExceptionResponse(Long status, String error, String message, String path) {
+    public BadRequestException(String message, String path) {
         super();
         this.timestamp = new Timestamp(System.currentTimeMillis());
-        this.status = status;
-        this.error = error;
+        this.status = HttpStatus.BAD_REQUEST;
         this.message = message;
         this.path = path;
     }
-
+    
+    
 }
