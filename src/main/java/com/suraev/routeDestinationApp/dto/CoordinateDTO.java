@@ -5,18 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DadataResponse {
-
-   @JsonProperty("geo_lat")
-   private String lattitude;
-
-   @JsonProperty("geo_lon")
-   private String longitude;
-
-    
+public class CoordinateDTO {
+    @JsonProperty("geo_lat")
+    private String latitude;
+    @JsonProperty("geo_lon")
+    private String longitude;
 }
-

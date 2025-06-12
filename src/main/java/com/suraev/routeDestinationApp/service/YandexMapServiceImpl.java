@@ -1,8 +1,7 @@
 package com.suraev.routeDestinationApp.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
+import org.springframework.web.client.RestClient;
 import lombok.RequiredArgsConstructor;
 import com.suraev.routeDestinationApp.dto.YandexRequest;
 import com.suraev.routeDestinationApp.dto.YandexResponse;
@@ -11,7 +10,7 @@ import com.suraev.routeDestinationApp.dto.YandexResponse;
 @RequiredArgsConstructor
 public class YandexMapServiceImpl implements YandexMapService {
 
-    private final RestTemplate restTemplate;
+    private final RestClient restClient;
 
     @Override
     public YandexResponse getCoordinates(YandexRequest request) {

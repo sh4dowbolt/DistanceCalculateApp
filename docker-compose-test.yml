@@ -13,16 +13,13 @@ services:
       - distance-calculate-network
     environment:
       - MYSQL_HOST=mysql-db
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=root
+      - MYSQL_USER=dev
+      - MYSQL_PASSWORD=dev
       - MYSQL_DATABASE=distance_calculate
 
   mysql-db:
     image: mysql:8.0
     container_name: mysql-db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: distance_calculate
     ports:
       - "3306:3306"
     healthcheck:
@@ -31,17 +28,19 @@ services:
       timeout: 5s
       retries: 5
     environment:
-      MYSQL_USER: root
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: dev
       MYSQL_DATABASE: distance_calculate
-
+      MYSQL_ROOT_PASSWORD: dev
     volumes:
-      - mysql-data:/var/lib/mysql/data
+      - mysql-data:/var/lib/mysql
     networks:
       - distance-calculate-network
 
+
 volumes:
   mysql-data:
+   
 
 networks:
   distance-calculate-network:
