@@ -13,6 +13,7 @@ import java.util.List;
 
 
 
+
 @RestController
 @RequestMapping("/getDistance")
 @RequiredArgsConstructor
@@ -21,11 +22,11 @@ public class AdressController {
     private final DadataService dadataServiceImpl;
 
     @PostMapping
-    public ResponseEntity<List<DadataResponse>> getDistance(@RequestBody String [] adress) {
-        DadataRequest dadataRequest= new DadataRequest();
-        dadataRequest.setAdress(adress);
+    // TO
+    public ResponseEntity<List<DadataResponse>> getDistance(@RequestBody String [] adresses) {
 
-        List<DadataResponse> ddataResponse = dadataServiceImpl.getAdress(dadataRequest);
+       
+        List<DadataResponse> ddataResponse = dadataServiceImpl.getCoordinate(adresses);
 
         return ResponseEntity.ok(ddataResponse);
 }

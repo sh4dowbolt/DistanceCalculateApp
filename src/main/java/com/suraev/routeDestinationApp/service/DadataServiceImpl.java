@@ -35,26 +35,38 @@ public class DadataServiceImpl implements DadataService {
     }
 
     @Override
-    public List<DadataResponse> getAdress(DadataRequest request) {
+    public List<DadataResponse> getCoordinate(String[] adresses) {
 
         // TODO: check parameters is UTF-8
-        String [] arrayRequests= request.getAdress();
-        
+      
         DadataResponse[] responseAll = restClient.post()
         .uri(ddataUrl)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON)
-        .body(arrayRequests)
+        .body(adresses)
         .header("Authorization", "Token " + apiKey)
         .header("X-Secret", secretKey)
         .retrieve()
         .onStatus(statusCode -> statusCode.equals(HttpStatus.BAD_REQUEST), (req, response) -> {
             throw new RuntimeException("Bad Request");
         })
+        .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(401)), (req, response) -> {
+            throw new RuntimeException("Unauthorized");
+        })
+        .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(403)), (req, response) -> {
+            throw new RuntimeException("Not accepted email or you have not enough balance");
+        })
+        .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(405)), (req, response) -> {
+            throw new RuntimeException("Method not allowed, only POST method is allowed");
+        })
+        .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(429)), (req, response) -> {
+            throw new RuntimeException("Too many requests, please try again later");
+        })
+        .onStatus(statusCode -> statusCode.equals(HttpStatus.valueOf(500)), (req, response) -> {
+            throw new RuntimeException("Internal server error");
+        })
         .body(DadataResponse[].class);
 
-        List<DadataResponse> list = Arrays.asList(responseAll);
-
-        return list;
+        return Arrays.asList(responseAll);
     }
 }
