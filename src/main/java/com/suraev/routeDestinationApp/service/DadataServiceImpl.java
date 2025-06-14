@@ -14,6 +14,7 @@ import java.util.List;
 import com.suraev.routeDestinationApp.util.ExceptionResponseHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.suraev.routeDestinationApp.dto.BadRequestException;
+import com.suraev.routeDestinationApp.dto.CoordinateDTO;
 
 @Service
 public class DadataServiceImpl implements DadataService {
@@ -37,7 +38,7 @@ public class DadataServiceImpl implements DadataService {
     }
 
         @Override
-        public DadataResponse getCoordinate(String [] adress) throws ExceptionResponse {
+        public CoordinateDTO getCoordinate(String [] adress) throws ExceptionResponse, BadRequestException {
 
         DadataResponse [] coordinate = restClient.post()
         .uri(ddataUrl)
@@ -54,7 +55,14 @@ public class DadataServiceImpl implements DadataService {
         .onStatus(status -> status.equals(HttpStatus.INTERNAL_SERVER_ERROR), (req, res) -> ExceptionResponseHandler.handleStatus(res, objectMapper))
         .body(DadataResponse[].class);
         
-        return coordinate[0];
+        if(coordinate == null) {
+            throw new BadRequestException("No coordinates found in response", "/getCoordinate");
+        }
+        
+        CoordinateDTO coordinateDTO = new CoordinateDTO();
+        coordinateDTO.setLatitude(coordinate[0].getLattitude());
+        coordinateDTO.setLongitude(coordinate[0].getLongitude());
+        return coordinateDTO;
     }
 
 }
