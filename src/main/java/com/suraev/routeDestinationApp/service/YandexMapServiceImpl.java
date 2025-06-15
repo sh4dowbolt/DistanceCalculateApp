@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import com.suraev.routeDestinationApp.dto.YandexDTO.YandexResponse;
+import com.suraev.routeDestinationApp.util.ConvertCoordinate;
 
 
 
@@ -82,14 +83,6 @@ public class YandexMapServiceImpl implements YandexMapService {
             .findFirst()
             .orElseThrow(() -> new BadRequestException("Координаты не найдены для адреса: " + adressString, "/getDistance"));
 
-        return convertToCoordinateDTO(pos);
-    }
-
-    private CoordinateDTO convertToCoordinateDTO(String pos) {
-        String[] coordinates = pos.split(" ");
-        CoordinateDTO coordinateDTO = new CoordinateDTO();
-        coordinateDTO.setLatitude(coordinates[0]);
-        coordinateDTO.setLongitude(coordinates[1]);
-        return coordinateDTO;
+        return ConvertCoordinate.convertToCoordinateDTO(pos);
     }
 }

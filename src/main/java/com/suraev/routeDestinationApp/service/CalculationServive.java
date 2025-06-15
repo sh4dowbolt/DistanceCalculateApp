@@ -1,9 +1,10 @@
 package com.suraev.routeDestinationApp.service;
 
-import java.math.BigDecimal;
+import com.suraev.routeDestinationApp.dto.BadRequestException;
+import com.suraev.routeDestinationApp.dto.CoordinatePosResponse;
 
 public interface CalculationServive {
 
-    BigDecimal calculateDistance(String adress);
+    CoordinatePosResponse calculateDistance(String [] adress) throws BadRequestException;
 
 }

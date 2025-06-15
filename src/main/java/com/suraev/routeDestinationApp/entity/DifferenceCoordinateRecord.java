@@ -8,10 +8,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "calculate_events")
+@Getter
+@Setter
 public class DifferenceCoordinateRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
