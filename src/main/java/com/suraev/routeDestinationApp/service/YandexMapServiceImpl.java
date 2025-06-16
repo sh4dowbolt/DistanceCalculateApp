@@ -32,7 +32,7 @@ public class YandexMapServiceImpl implements YandexMapService {
     private final String yandexUrl;
     private final String apiKey;
     private final ObjectMapper objectMapper;
-
+    private static final String PATH_URL = "/getDistance";
 
     public YandexMapServiceImpl(
         RestClient restClient,
@@ -53,8 +53,6 @@ public class YandexMapServiceImpl implements YandexMapService {
         URI uri = URI.create(yandexUrl + "?apikey=" + apiKey + "&geocode=" + 
             URLEncoder.encode(adressString, StandardCharsets.UTF_8) + "&format=json");
 
-        System.out.println(uri.toString());
-
         YandexResponse yandexResponse = restClient.get()
             .uri(uri)
             .retrieve()
@@ -73,7 +71,7 @@ public class YandexMapServiceImpl implements YandexMapService {
             yandexResponse.getResponse().getGeoObjectCollection() == null || 
             yandexResponse.getResponse().getGeoObjectCollection().getFeatureMember() == null || 
             yandexResponse.getResponse().getGeoObjectCollection().getFeatureMember().isEmpty()) {
-            throw new BadRequestException("Адрес не найден: " + adressString, "/getDistance");
+            throw new BadRequestException("Address not found: " + adressString, PATH_URL);
         }
 
         String pos = yandexResponse.getResponse().getGeoObjectCollection().getFeatureMember().stream()
@@ -81,8 +79,8 @@ public class YandexMapServiceImpl implements YandexMapService {
             .map(GeoObject::getPoint)
             .map(Point::getPos)
             .findFirst()
-            .orElseThrow(() -> new BadRequestException("Координаты не найдены для адреса: " + adressString, "/getDistance"));
+            .orElseThrow(() -> new BadRequestException("The coordinaters were not found " + adressString, "/getDistance"));
 
-        return ConvertCoordinate.convertToCoordinateDTO(pos);
+        return ConvertCoordinate.convert(pos);
     }
 }

@@ -23,18 +23,21 @@ public class DadataServiceImpl implements DadataService {
     private final String apiKey;
     private final String secretKey;
     private final ObjectMapper objectMapper;
+    private static final String PATH_URL;
 
     public DadataServiceImpl(
         RestClient restClient,
         @Value("${dadata.url}") String ddataUrl, 
         @Value("${dadata.apiKey}") String apiKey, 
-        @Value("${dadata.secretKey}") String secretKey
+        @Value("${dadata.secretKey}") String secretKey,
+        @Value("${getDistance.path}") String PATH_URL
     ) {
         this.restClient = restClient;
         this.ddataUrl = ddataUrl;
         this.apiKey = apiKey;
         this.secretKey = secretKey;
         this.objectMapper = new ObjectMapper();
+        this.PATH_URL = PATH_URL;
     }
 
         @Override
@@ -55,12 +58,12 @@ public class DadataServiceImpl implements DadataService {
         .onStatus(status -> status.equals(HttpStatus.INTERNAL_SERVER_ERROR), (req, res) -> ExceptionResponseHandler.handleStatus(res, objectMapper))
         .body(DadataResponse[].class);
         
-        if(coordinate == null) {
-            throw new BadRequestException("No coordinates found in response", "/getCoordinate");
+        if(coordinate == null || coordinate.length == 0) {
+            throw new BadRequestException("No coordinates found in response", PATH_URL);
         }
         
         CoordinateDTO coordinateDTO = new CoordinateDTO();
-        coordinateDTO.setLatitude(coordinate[0].getLattitude());
+        coordinateDTO.setLatitude(coordinate[0].getLatitude());
         coordinateDTO.setLongitude(coordinate[0].getLongitude());
         return coordinateDTO;
     }

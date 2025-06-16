@@ -12,7 +12,7 @@ import lombok.Setter;
 public class DadataResponse {
 
     @JsonProperty("geo_lat")
-    private String lattitude;
+    private String latitude;
 
     @JsonProperty("geo_lon")
     private String longitude;

@@ -18,42 +18,45 @@ import com.suraev.routeDestinationApp.dto.CoordinatesPair;
 import lombok.RequiredArgsConstructor;  
 
 @Service
-@RequiredArgsConstructor
 public class CalculationServiceImpl implements CalculationService {
 
     private final YandexMapService yandexMapService;
     private final DadataService dadataService;
     private final DifferenceCoordinateRecordRepository differenceCoordinateRepository;
+    private final String PATH_URL;
+    
+    public CalculationServiceImpl(YandexMapService yandexMapService,
+     DadataService dadataService, 
+     DifferenceCoordinateRecordRepository differenceCoordinateRepository, 
+     @Value("${getDistance.path}") String PATH_URL) {
+        this.yandexMapService = yandexMapService;
+        this.dadataService = dadataService;
+        this.differenceCoordinateRepository = differenceCoordinateRepository;
+        this.PATH_URL = PATH_URL;
+    }
 
     @Override
     public CoordinatePosResponse calculateDistance(String[] adress, MeasureType measureType) throws BadRequestException {
-       
         String adressFromRequest = adress[0];
         if (!StringValidator.isValidUTF8(adressFromRequest)) {
-            throw new BadRequestException("Incorrect data format, must use UTF-8 encoding", adressFromRequest)
+            throw new BadRequestException("Incorrect data format, must use UTF-8 encoding", PATH_URL);
         }
         
         CoordinatesPair cordsFromServices = getCoordinatesFromServices(adress);
         double distanceKm = DistanceCalculator.calculateDistance(cordsFromServices);
-
-        if(measureType != MeasureType.M) {
-            double convertedDistance = DistanceCalculator.convertDistance(distanceKm, measureType);
-        }
-        
-        saveCalculationResult(adress, distanceKm, cordsFromServices);
-
-        return createResponse(distanceKm, measureType);
+        double resultDistance = DistanceCalculator.convertDistance(distanceKm, measureType);
+        saveCalculationResult(adress, resultDistance, cordsFromServices);
+        return createResponse(resultDistance, measureType);
     }
 
     private void saveCalculationResult(String [] adress, double distance,
                                        CoordinatesPair coordinatesPair) {
         DifferenceCoordinateRecord differenceCoordinateRecord = new DifferenceCoordinateRecord();
-        differenceCoordinateRecord.setSourceAdress(adress[0]);
+        differenceCoordinateRecord.setSourceAddress(adress[0]);
         differenceCoordinateRecord.setCreatedAt(Instant.now());
         differenceCoordinateRecord.setDistance(distance);
         differenceCoordinateRecord.setDadataCoordinate(coordinatesPair.dadataEntity());
         differenceCoordinateRecord.setYandexCoordinate(coordinatesPair.yandexEntity());
-
         differenceCoordinateRepository.save(differenceCoordinateRecord);
     }
 

@@ -4,7 +4,7 @@ import com.suraev.routeDestinationApp.dto.CoordinateDTO;
 
 
 public class ConvertCoordinate {
-    public static CoordinateDTO convert(String pos) {
+    public static CoordinateDTO convertToCoordinateDTO(String pos) {
         String[] coordinates = pos.split(" ");
         return new CoordinateDTO(coordinates[0], coordinates[1]);
     }

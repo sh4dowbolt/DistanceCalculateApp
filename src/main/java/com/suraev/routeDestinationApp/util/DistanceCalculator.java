@@ -9,7 +9,6 @@ public class DistanceCalculator {
     private static final double EARTH_RADIUS_KM = 6371.0;
     
     private static final double KM_TO_M = 1000.0;
-    private static final double KM_TO_MI = 0.621371;
     private static final double KM_TO_CENTIMETER = 100000.0;
 
     public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {

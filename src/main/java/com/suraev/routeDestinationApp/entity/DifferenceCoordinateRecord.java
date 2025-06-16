@@ -20,8 +20,8 @@ public class DifferenceCoordinateRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "source_adress")
-    private String sourceAdress;
+    @Column(name = "source_address")
+    private String sourceAddress;
     @Column(name = "create_date")
     private Instant createdAt;
     @Column(name = "distance")

@@ -13,6 +13,7 @@ import com.suraev.routeDestinationApp.service.CalculationServiceImpl;
 import com.suraev.routeDestinationApp.dto.CoordinatePosResponse;
 import com.suraev.routeDestinationApp.dto.MeasureType;
 import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.validation.constraints.NotNull;
 
 
 @RestController
@@ -23,13 +24,13 @@ public class AdressController {
     private final CalculationServiceImpl calculationServiceImpl;
 
     public AdressController(CalculationServiceImpl calculationServiceImpl,
-     @Value("${get.getDistance.path}") String pathUrl) {
+     @Value("${getDistance.path}") String pathUrl) {
         this.calculationServiceImpl = calculationServiceImpl;
         this.PATH_URL = pathUrl;
     }   
 
     @PostMapping
-    public ResponseEntity<CoordinatePosResponse> getDistance(@RequestBody String [] adress,
+    public ResponseEntity<CoordinatePosResponse> getDistance(@NotNull @RequestBody String [] adress,
                                  @RequestParam(name = "measureType", defaultValue = "km") MeasureType measureType) throws BadRequestException, ExceptionResponse {
         if(adress.length>1) {
             throw new BadRequestException("Too many addresses, only one address is allowed", PATH_URL);

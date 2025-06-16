@@ -7,5 +7,5 @@ import com.suraev.routeDestinationApp.dto.CoordinateDTO;
 
 public interface DadataService {
 
-    CoordinateDTO getCoordinate(String []  adress) throws ExceptionResponse, BadRequestException;
+    CoordinateDTO getCoordinate(String [] adress) throws ExceptionResponse, BadRequestException;
 }
