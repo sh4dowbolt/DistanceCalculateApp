@@ -13,44 +13,60 @@ import com.suraev.routeDestinationApp.entity.Coordinate;
 import java.time.Instant;
 import com.suraev.routeDestinationApp.dto.CoordinatePosResponse;
 import com.suraev.routeDestinationApp.dto.MeasureType;
-
+import com.suraev.routeDestinationApp.dto.CoordinatesPair;
 import lombok.RequiredArgsConstructor;  
 
 @Service
 @RequiredArgsConstructor
-public class CalculationServiceImpl implements CalculationServive {
+public class CalculationServiceImpl implements CalculationService {
 
     private final YandexMapService yandexMapService;
     private final DadataService dadataService;
-    private final DifferenceCoordinateRecordRepository differenceCoordinateRecordRepository;
+    private final DifferenceCoordinateRecordRepository differenceCoordinateRepository;
 
     @Override
-    public CoordinatePosResponse calculateDistance(String [] adress) throws BadRequestException {
-        CoordinateDTO dadataCord = dadataService.getCoordinate(adress);
-        CoordinateDTO yandexCord = yandexMapService.getCoordinate(adress);
+    public CoordinatePosResponse calculateDistance(String[] adress, MeasureType measureType) throws BadRequestException {
+       
+        CoordinatesPair cordsFromServices = getCoordinatesFromServices(adress);
 
-        Coordinate dadataCoordinate = mapToCoordinate(dadataCord);
-        Coordinate yandexCoordinate = mapToCoordinate(yandexCord);
+        double distanceKm = DistanceCalculator.calculateDistance(cordsFromServices);
 
-        double distance = DistanceCalculator.calculateDistanceFromStrings(dadataCord, yandexCord);
+        if(measureType != MeasureType.M) {
+            double convertedDistance = DistanceCalculator.convertDistance(distanceKm, measureType);
+        }
+        saveCalculationResult(adress, distanceKm, cordsFromServices);
 
-        DifferenceCoordinateRecord differenceCoordinateRecord = saveDifferenceCoordinateRecord(adress, distance, dadataCoordinate, yandexCoordinate);
-  
-        CoordinatePosResponse coordinatePosResponse = new CoordinatePosResponse();
-        coordinatePosResponse.setDifference(distance);
-        coordinatePosResponse.setMeasureType(MeasureType.M);
-        return coordinatePosResponse;
+        return createResponse(distanceKm, measureType);
     }
 
-    private DifferenceCoordinateRecord saveDifferenceCoordinateRecord(String [] adress, 
-    double distance, Coordinate dadataCoordinate, Coordinate yandexCoordinate) {
+    private void saveCalculationResult(String [] adress, double distance,
+                                                             CoordinatesPair coordinatesPair) {
         DifferenceCoordinateRecord differenceCoordinateRecord = new DifferenceCoordinateRecord();
         differenceCoordinateRecord.setSourceAdress(adress[0]);
         differenceCoordinateRecord.setCreatedAt(Instant.now());
         differenceCoordinateRecord.setDistance(distance);
-        differenceCoordinateRecord.setDadataCoordinate(dadataCoordinate);
-        differenceCoordinateRecord.setYandexCoordinate(yandexCoordinate);
-        return differenceCoordinateRecord;
+        differenceCoordinateRecord.setDadataCoordinate(coordinatesPair.dadataEntity());
+        differenceCoordinateRecord.setYandexCoordinate(coordinatesPair.yandexEntity());
+
+        differenceCoordinateRepository.save(differenceCoordinateRecord);
+    }
+
+    private CoordinatesPair getCoordinatesFromServices(String [] adress) throws BadRequestException {
+        CoordinateDTO dadataCord = dadataService.getCoordinate(adress);
+        CoordinateDTO yandexCord = yandexMapService.getCoordinate(adress);
+
+        return new CoordinatesPair(
+            mapToCoordinate(dadataCord),
+            mapToCoordinate(yandexCord),
+            dadataCord,
+            yandexCord);
+    }
+
+    private CoordinatePosResponse createResponse(double distance,  MeasureType measureType) {
+        CoordinatePosResponse response = new CoordinatePosResponse();
+        response.setDifference(distance);
+        response.setMeasureType(measureType);
+        return response;
     }
 
     private Coordinate mapToCoordinate(CoordinateDTO coordinateDTO) {

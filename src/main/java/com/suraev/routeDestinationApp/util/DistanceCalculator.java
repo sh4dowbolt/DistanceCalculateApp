@@ -1,10 +1,16 @@
 package com.suraev.routeDestinationApp.util;
 
 import com.suraev.routeDestinationApp.dto.CoordinateDTO;
+import com.suraev.routeDestinationApp.dto.CoordinatesPair;
+import com.suraev.routeDestinationApp.dto.MeasureType;
 
 public class DistanceCalculator {
 
     private static final double EARTH_RADIUS_KM = 6371.0;
+    
+    private static final double KM_TO_M = 1000.0;
+    private static final double KM_TO_MI = 0.621371;
+    private static final double KM_TO_CENTIMETER = 100000.0;
 
     public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
 
@@ -25,12 +31,12 @@ public class DistanceCalculator {
         return EARTH_RADIUS_KM * c;
     }
 
-    public static double calculateDistanceFromStrings(CoordinateDTO coordinate1, CoordinateDTO coordinate2) {
-        
-        String cord1Lat = coordinate1.getLatitude();
-        String cord1Lon = coordinate1.getLongitude();
-        String cord2Lat = coordinate2.getLatitude();
-        String cord2Lon = coordinate2.getLongitude();
+    public static double calculateDistance(CoordinatesPair coordinatesPair) {
+
+        String cord1Lat = coordinatesPair.dadataEntity().getLatitude();
+        String cord1Lon = coordinatesPair.dadataEntity().getLongitude();
+        String cord2Lat = coordinatesPair.yandexEntity().getLatitude();
+        String cord2Lon = coordinatesPair.yandexEntity().getLongitude();
     
         return calculateDistance(
             Double.parseDouble(cord1Lat),
@@ -38,5 +44,13 @@ public class DistanceCalculator {
             Double.parseDouble(cord2Lat),       
             Double.parseDouble(cord2Lon)
         );
+    }
+
+    public static double convertDistance(double distanceKm, MeasureType measureType) {
+        return switch (measureType) {
+            case KM -> distanceKm;
+            case M -> distanceKm * KM_TO_M;
+            case CENTIMETER -> distanceKm * KM_TO_CENTIMETER;
+        };
     }
 } 
