@@ -4,7 +4,8 @@ import org.springframework.stereotype.Service;
 import com.suraev.routeDestinationApp.dto.CoordinateDTO;
 import com.suraev.routeDestinationApp.repository.DifferenceCoordinateRecordRepository;
 import com.suraev.routeDestinationApp.util.DistanceCalculator;
-import com.suraev.routeDestinationApp.service.CalculationServive;
+import com.suraev.routeDestinationApp.util.StringValidator;
+import com.suraev.routeDestinationApp.service.CalculationService;
 import com.suraev.routeDestinationApp.service.YandexMapService;
 import com.suraev.routeDestinationApp.service.DadataService;
 import com.suraev.routeDestinationApp.dto.BadRequestException;
@@ -27,20 +28,25 @@ public class CalculationServiceImpl implements CalculationService {
     @Override
     public CoordinatePosResponse calculateDistance(String[] adress, MeasureType measureType) throws BadRequestException {
        
-        CoordinatesPair cordsFromServices = getCoordinatesFromServices(adress);
+        String adressFromRequest = adress[0];
+        if (!StringValidator.isValidUTF8(adressFromRequest)) {
+            throw new BadRequestException("Incorrect data format, must use UTF-8 encoding", adressFromRequest)
+        }
 
+        CoordinatesPair cordsFromServices = getCoordinatesFromServices(adress);
         double distanceKm = DistanceCalculator.calculateDistance(cordsFromServices);
 
         if(measureType != MeasureType.M) {
             double convertedDistance = DistanceCalculator.convertDistance(distanceKm, measureType);
         }
+        
         saveCalculationResult(adress, distanceKm, cordsFromServices);
 
         return createResponse(distanceKm, measureType);
     }
 
     private void saveCalculationResult(String [] adress, double distance,
-                                                             CoordinatesPair coordinatesPair) {
+                                       CoordinatesPair coordinatesPair) {
         DifferenceCoordinateRecord differenceCoordinateRecord = new DifferenceCoordinateRecord();
         differenceCoordinateRecord.setSourceAdress(adress[0]);
         differenceCoordinateRecord.setCreatedAt(Instant.now());
@@ -56,8 +62,8 @@ public class CalculationServiceImpl implements CalculationService {
         CoordinateDTO yandexCord = yandexMapService.getCoordinate(adress);
 
         return new CoordinatesPair(
-            mapToCoordinate(dadataCord),
-            mapToCoordinate(yandexCord),
+            toCoordinate(dadataCord),
+            toCoordinate(yandexCord),
             dadataCord,
             yandexCord);
     }
@@ -69,7 +75,7 @@ public class CalculationServiceImpl implements CalculationService {
         return response;
     }
 
-    private Coordinate mapToCoordinate(CoordinateDTO coordinateDTO) {
+    private Coordinate toCoordinate(CoordinateDTO coordinateDTO) {
         Coordinate coordinate = new Coordinate();
         coordinate.setLatitude(coordinateDTO.getLatitude());
         coordinate.setLongitude(coordinateDTO.getLongitude());
