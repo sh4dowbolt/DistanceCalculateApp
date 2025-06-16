@@ -32,7 +32,7 @@ public class CalculationServiceImpl implements CalculationService {
         if (!StringValidator.isValidUTF8(adressFromRequest)) {
             throw new BadRequestException("Incorrect data format, must use UTF-8 encoding", adressFromRequest)
         }
-
+        
         CoordinatesPair cordsFromServices = getCoordinatesFromServices(adress);
         double distanceKm = DistanceCalculator.calculateDistance(cordsFromServices);
 
