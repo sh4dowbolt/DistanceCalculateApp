@@ -1,20 +1,16 @@
 package com.suraev.routeDestinationApp.exception;
 
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.http.ResponseEntity;
-import com.suraev.routeDestinationApp.dto.ExceptionResponse;
 import com.suraev.routeDestinationApp.dto.ExceptionResponseDTO;
-import com.suraev.routeDestinationApp.dto.BadRequestException;
 import com.suraev.routeDestinationApp.dto.BadRequestExceptionDTO;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.http.HttpStatus;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class ExceptionHandlerTranslator {
 
     @ExceptionHandler(ExceptionResponse.class)
-    @ResponseBody
     public ResponseEntity<ExceptionResponseDTO> handleExceptionResponse(ExceptionResponse e) {
         return ResponseEntity
             .status(HttpStatus.valueOf(e.getStatus().intValue()))
@@ -22,8 +18,6 @@ public class ExceptionHandlerTranslator {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    
-    @ResponseBody
     public ResponseEntity<BadRequestExceptionDTO> handleBadRequestException(BadRequestException e) {
         return ResponseEntity
             .status(e.getStatus())
