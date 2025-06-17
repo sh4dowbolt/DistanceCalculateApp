@@ -5,7 +5,7 @@ Project is REST API for calculating distance between two points on the map using
 
 ## Stack
 - **Programming language**: Java 17
-- **Framework**: Spring Boot 3.x
+- **Framework**: Spring Boot 3.5.0
 - **Database**: MySQL 8.0
 - **Project management**: Maven
 - **Extra tools**:
@@ -25,8 +25,8 @@ Project is REST API for calculating distance between two points on the map using
 ### Launch project
 1. Clone repository:
    ```bash
-   git clone https://github.com/your-repo/DistanceCalculateApp.git
-   cd DistanceCalculateApp
+   git clone https://github.com/sh4dowbolt/DistanceCalculateApp.git
+   cd ~project directory~
    mvn clean package
    ```
 2. Launch docker-compose project:
