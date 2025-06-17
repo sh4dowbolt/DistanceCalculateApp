@@ -1,0 +1,2 @@
+# Allow editing of .env files
+!.env 

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import com.suraev.routeDestinationApp.dto.ExceptionResponse;
+import com.suraev.routeDestinationApp.exception.ExceptionResponse;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 public class ExceptionResponseHandler {

@@ -1,8 +1,7 @@
 package com.suraev.routeDestinationApp.service;
 
-import com.suraev.routeDestinationApp.dto.DadataResponse;
-import com.suraev.routeDestinationApp.dto.ExceptionResponse;
-import com.suraev.routeDestinationApp.dto.BadRequestException;
+import com.suraev.routeDestinationApp.exception.ExceptionResponse;
+import com.suraev.routeDestinationApp.exception.BadRequestException;
 import com.suraev.routeDestinationApp.dto.CoordinateDTO;
 
 public interface DadataService {

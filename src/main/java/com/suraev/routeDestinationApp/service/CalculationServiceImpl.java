@@ -8,14 +8,15 @@ import com.suraev.routeDestinationApp.util.StringValidator;
 import com.suraev.routeDestinationApp.service.CalculationService;
 import com.suraev.routeDestinationApp.service.YandexMapService;
 import com.suraev.routeDestinationApp.service.DadataService;
-import com.suraev.routeDestinationApp.dto.BadRequestException;
 import com.suraev.routeDestinationApp.entity.DifferenceCoordinateRecord;
+import com.suraev.routeDestinationApp.exception.BadRequestException;
 import com.suraev.routeDestinationApp.entity.Coordinate;
 import java.time.Instant;
 import com.suraev.routeDestinationApp.dto.CoordinatePosResponse;
 import com.suraev.routeDestinationApp.dto.MeasureType;
 import com.suraev.routeDestinationApp.dto.CoordinatesPair;
 import lombok.RequiredArgsConstructor;  
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class CalculationServiceImpl implements CalculationService {

@@ -1,20 +1,20 @@
 package com.suraev.routeDestinationApp.controller;
 
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.suraev.routeDestinationApp.dto.ExceptionResponse;
+import com.suraev.routeDestinationApp.exception.ExceptionResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import com.suraev.routeDestinationApp.dto.BadRequestException;
+import com.suraev.routeDestinationApp.exception.BadRequestException;
 import com.suraev.routeDestinationApp.service.CalculationServiceImpl;
 import com.suraev.routeDestinationApp.dto.CoordinatePosResponse;
 import com.suraev.routeDestinationApp.dto.MeasureType;
 import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-
 
 @RestController
 @RequestMapping("/getDistance")
@@ -30,13 +30,16 @@ public class AdressController {
     }   
 
     @PostMapping
-    public ResponseEntity<CoordinatePosResponse> getDistance(@NotNull @RequestBody String [] adress,
-                                 @RequestParam(name = "measureType", defaultValue = "km") MeasureType measureType) throws BadRequestException, ExceptionResponse {
-        if(adress.length>1) {
+    public ResponseEntity<CoordinatePosResponse> getDistance(
+            @Valid @NotEmpty(message = "Address cannot be empty") @RequestBody String[] adress,
+            @RequestParam(name = "measureType", defaultValue = "KM") MeasureType measureType) 
+            throws BadRequestException, ExceptionResponse {
+        
+        if(adress.length > 1) {
             throw new BadRequestException("Too many addresses, only one address is allowed", PATH_URL);
         }
-
+    
         CoordinatePosResponse coordinatePosResponse = calculationServiceImpl.calculateDistance(adress, measureType);
         return ResponseEntity.ok(coordinatePosResponse);
-}
+    }
 }

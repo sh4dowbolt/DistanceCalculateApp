@@ -1,4 +1,4 @@
-package com.suraev.routeDestinationApp.dto;
+package com.suraev.routeDestinationApp.exception;
 
 import java.sql.Timestamp;
 

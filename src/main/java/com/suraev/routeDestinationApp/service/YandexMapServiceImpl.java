@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import com.suraev.routeDestinationApp.dto.YandexDTO.FeatureMember;
 import com.suraev.routeDestinationApp.dto.YandexDTO.GeoObject;
 import com.suraev.routeDestinationApp.dto.YandexDTO.Point;
-import com.suraev.routeDestinationApp.dto.BadRequestException;
 import com.suraev.routeDestinationApp.dto.CoordinateDTO;
 import org.springframework.http.HttpStatus;
 import com.suraev.routeDestinationApp.util.ExceptionResponseHandler;
@@ -20,9 +19,8 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import com.suraev.routeDestinationApp.dto.YandexDTO.YandexResponse;
+import com.suraev.routeDestinationApp.exception.BadRequestException;
 import com.suraev.routeDestinationApp.util.ConvertCoordinate;
-
-
 
 
 @Service
@@ -81,6 +79,6 @@ public class YandexMapServiceImpl implements YandexMapService {
             .findFirst()
             .orElseThrow(() -> new BadRequestException("The coordinaters were not found " + adressString, "/getDistance"));
 
-        return ConvertCoordinate.convert(pos);
+        return ConvertCoordinate.convertToCoordinateDTO(pos);
     }
 }

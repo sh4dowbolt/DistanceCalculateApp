@@ -2,18 +2,14 @@ package com.suraev.routeDestinationApp.service;
 
 import org.springframework.stereotype.Service;
 import com.suraev.routeDestinationApp.dto.DadataResponse;
-import com.suraev.routeDestinationApp.dto.ExceptionResponse;
-
-import lombok.RequiredArgsConstructor;
+import com.suraev.routeDestinationApp.exception.BadRequestException;
+import com.suraev.routeDestinationApp.exception.ExceptionResponse;
 import org.springframework.web.client.RestClient;
-import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
-import java.util.List;
 import com.suraev.routeDestinationApp.util.ExceptionResponseHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.suraev.routeDestinationApp.dto.BadRequestException;
 import com.suraev.routeDestinationApp.dto.CoordinateDTO;
 
 @Service
@@ -23,21 +19,21 @@ public class DadataServiceImpl implements DadataService {
     private final String apiKey;
     private final String secretKey;
     private final ObjectMapper objectMapper;
-    private static final String PATH_URL;
+    private  final String PATH_URL;
 
     public DadataServiceImpl(
         RestClient restClient,
         @Value("${dadata.url}") String ddataUrl, 
         @Value("${dadata.apiKey}") String apiKey, 
         @Value("${dadata.secretKey}") String secretKey,
-        @Value("${getDistance.path}") String PATH_URL
+        @Value("${getDistance.path}") String pathUrl
     ) {
         this.restClient = restClient;
         this.ddataUrl = ddataUrl;
         this.apiKey = apiKey;
         this.secretKey = secretKey;
         this.objectMapper = new ObjectMapper();
-        this.PATH_URL = PATH_URL;
+        this.PATH_URL = pathUrl;
     }
 
         @Override
