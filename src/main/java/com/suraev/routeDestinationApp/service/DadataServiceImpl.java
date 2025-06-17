@@ -26,14 +26,14 @@ public class DadataServiceImpl implements DadataService {
         @Value("${dadata.url}") String ddataUrl, 
         @Value("${dadata.apiKey}") String apiKey, 
         @Value("${dadata.secretKey}") String secretKey,
-        @Value("${getDistance.path}") String PATH_URL
+        @Value("${getDistance.path}") String pathUrl
     ) {
         this.restClient = restClient;
         this.ddataUrl = ddataUrl;
         this.apiKey = apiKey;
         this.secretKey = secretKey;
         this.objectMapper = new ObjectMapper();
-        this.PATH_URL = PATH_URL;
+        this.PATH_URL = pathUrl;
     }
 
         @Override

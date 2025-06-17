@@ -1,36 +1,118 @@
 # DistanceCalculateApp
-Задача
-Реализовать Spring Boot приложение, которое:
-1. Принимает текстовый адрес через REST API
-2. Получает координаты через Yandex Maps API и Dadata API
-3. Рассчитывает расстояние между координатами в метрах
-4. Сохраняет результаты в MySQL
-5. Возвращает сравнение результатов
 
+## Description
+Project is REST API for calculating distance between two points on the map using coordinates from different geocoding services (Yandex Maps and DaData). The application allows getting distance in different units of measurement (kilometers, meters, centimeters).
 
+## Stack
+- **Programming language**: Java 17
+- **Framework**: Spring Boot 3.x
+- **Database**: MySQL 8.0
+- **Project management**: Maven
+- **Extra tools**:
+  - **Spring WebClient** (for external API calls)
+  - **Spring Data JPA** (for database operations)
+  - **Docker** (for containerization)
+  - **Actuator** (for monitoring)
 
-Технические требования
+## Setup
+### Requirements
+- Java 17 or higher
+- Docker and Docker Compose
+- Maven
+- Access to Yandex Maps API
+- Access to DaData API
 
-1. Технологический стек:
-- Java 17
-- Spring Boot 3.x
-- Spring Data JPA
-- Spring Web (REST)
-- Spring WebClient
-- MySQL Driver
-- Lombok
-- Maven/Gradle
-- Docker
+### Launch project
+1. Clone repository:
+   ```bash
+   git clone https://github.com/your-repo/DistanceCalculateApp.git
+   cd DistanceCalculateApp
+   mvn clean package
+   ```
+2. Launch docker-compose project:
+   ```bash 
+   docker-compose up -d
+   ```
+3. That's all. App will be available on port 8080
 
-Требуемая функциональность
-1. REST контроллер для обработки запросов
-2. Сервис для координации работы:
-- Вызов Yandex API
-- Вызов Dadata API
-- Расчет расстояния
-- Сохранение в БД
-3. Репозиторий для работы с MySQL
-4. DTO для входа/выхода API
-5. Конфигурация HTTP клиентов
-6. Обработка ошибок API и БД
-7. Docker-контейнеризация всего приложения
+## Design decisions
+1. **Geocoding**:
+   - Using two different geocoding services (Yandex Maps and DaData) for better accuracy
+   - Comparing results from both services to ensure data consistency
+
+2. **Distance calculation**:
+   - Calculating distance between coordinates using the Haversine formula
+   - Supporting different units of measurement (KM, M, CENTIMETER)
+   - Results are stored in the database for history
+
+3. **Error handling**:
+   - Comprehensive error handling for API calls
+   - Validation of input data
+   - Proper error responses with meaningful messages
+
+4. **Monitoring**:
+   - Health checks for application and database
+   - Metrics available through Actuator
+   - Docker container health monitoring
+
+## Example of requests
+- **Calculate distance**:
+  ```http
+  POST /getDistance
+  Content-Type: application/json
+  
+  {
+      "address": "Москва, Красная площадь, 1"
+  }
+  ```
+  Query parameters:
+  - `measureType` (optional): KM, M, CENTIMETER (default: KM)
+
+  Response:
+  ```json
+  {
+      "difference": 0.0,
+      "measureType": "KM"
+  }
+  ```
+
+## Documentation
+Actuator endpoints available at:
+- Health check: `http://localhost:8080/actuator/health`
+- Metrics: `http://localhost:8080/actuator/metrics`
+
+## Configuration
+The project already has configured environment variables, but you can modify them according to your needs. Update the existing `.env` file in the root directory with the following content:
+```env
+# MySQL Configuration
+MYSQL_ROOT_PASSWORD=your_root_password
+MYSQL_DATABASE=distance_db
+MYSQL_USER=distance_user
+MYSQL_PASSWORD=your_password
+
+# Spring Configuration
+SPRING_PROFILES_ACTIVE=dev
+
+# API Keys
+DADATA_API_KEY=your_dadata_api_key
+DADATA_SECRET_KEY=your_dadata_secret_key
+YANDEX_API_KEY=your_yandex_api_key
+```
+
+## Error handling
+The application returns the following HTTP statuses:
+- 200: Successful request
+- 400: Invalid request format
+- 404: Resource not found
+- 500: Internal server error
+
+Example error response:
+```json
+{
+    "timestamp": "2024-03-16T22:39:27.168Z",
+    "status": 400,
+    "error": "Bad Request",
+    "message": "Invalid address format",
+    "path": "/getDistance"
+}
+```
