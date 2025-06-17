@@ -85,18 +85,15 @@ Actuator endpoints available at:
 The project already has configured environment variables, but you can modify them according to your needs. Update the existing `.env` file in the root directory with the following content:
 ```env
 # MySQL Configuration
-MYSQL_ROOT_PASSWORD=your_root_password
-MYSQL_DATABASE=distance_db
-MYSQL_USER=distance_user
-MYSQL_PASSWORD=your_password
-
-# Spring Configuration
-SPRING_PROFILES_ACTIVE=dev
+MYSQL_ROOT_PASSWORD=root_password
+MYSQL_DATABASE=db
+MYSQL_USER=user
+MYSQL_PASSWORD=password
 
 # API Keys
-DADATA_API_KEY=your_dadata_api_key
-DADATA_SECRET_KEY=your_dadata_secret_key
-YANDEX_API_KEY=your_yandex_api_key
+DADATA_API_KEY=dadata_api_key
+DADATA_SECRET_KEY=dadata_secret_key
+YANDEX_API_KEY=yandex_api_key
 ```
 
 ## Error handling
