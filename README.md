@@ -26,7 +26,7 @@ Project is REST API for calculating distance between two points on the map using
 1. Clone repository:
    ```bash
    git clone https://github.com/sh4dowbolt/DistanceCalculateApp.git
-   cd ~project directory~
+   cd <project directory>
    mvn clean package
    ```
 2. Launch docker-compose project:
