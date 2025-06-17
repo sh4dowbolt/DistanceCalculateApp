@@ -1,4 +1,4 @@
-package com.suraev.routeDestinationApp.config;
+package com.suraev.routeDestinationApp.util;
 
 import com.suraev.routeDestinationApp.dto.MeasureType;
 import org.springframework.core.convert.converter.Converter;
