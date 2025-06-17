@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import com.suraev.routeDestinationApp.dto.YandexDTO.YandexResponse;
 import com.suraev.routeDestinationApp.exception.BadRequestException;
 import com.suraev.routeDestinationApp.util.ConvertCoordinate;
-
+import com.suraev.routeDestinationApp.exception.ExceptionResponse;
 
 @Service
 public class YandexMapServiceImpl implements YandexMapService {
@@ -46,7 +46,7 @@ public class YandexMapServiceImpl implements YandexMapService {
 
 
     @Override
-    public CoordinateDTO getCoordinate(String [] adress) throws BadRequestException {
+    public CoordinateDTO getCoordinate(String [] adress) throws BadRequestException, ExceptionResponse {
         String adressString = adress[0];
         URI uri = URI.create(yandexUrl + "?apikey=" + apiKey + "&geocode=" + 
             URLEncoder.encode(adressString, StandardCharsets.UTF_8) + "&format=json");
