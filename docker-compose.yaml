@@ -1,6 +1,6 @@
 services:
   mysql-db:
-    image: bitnami/mysql:8.0
+    image: mysql:8.0.33
     container_name: mysql-dev
     env_file:
       - .env
@@ -12,15 +12,15 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - mysql_data:/bitnami/mysql
+      - mysql_data:/var/lib/mysql
     networks:
       - app-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
     restart: unless-stopped
 
   app:
@@ -32,8 +32,7 @@ services:
     env_file:
       - .env
     environment:
-      #Database Configuration
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/${MYSQL_DATABASE}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
       # DaData API Configuration
