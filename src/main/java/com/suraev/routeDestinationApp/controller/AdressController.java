@@ -32,7 +32,7 @@ public class AdressController {
     @PostMapping
     public ResponseEntity<CoordinatePosResponse> getDistance(
             @Valid @NotEmpty(message = "Address cannot be empty") @RequestBody String[] adress,
-            @RequestParam(name = "measureType", defaultValue = "KM") MeasureType measureType) 
+            @RequestParam(name = "measureType", defaultValue = "M") MeasureType measureType) 
             throws BadRequestException, ExceptionResponse {
         
         if(adress.length > 1) {

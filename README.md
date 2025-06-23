@@ -62,13 +62,13 @@ Project is REST API for calculating distance between two points on the map using
   ["Москва, Красная площадь, 1"]
   ```
   Query parameters:
-  - `measureType` (optional): KM, M, CENTIMETER (default: KM)
+  - `measureType` (optional): KM, M, CENTIMETER (default: M)
 
   Response:
   ```json
   {
       "difference": 0.0,
-      "measureType": "KM"
+      "measureType": "M"
   }
   ```
 
