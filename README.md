@@ -61,9 +61,7 @@ Project is REST API for calculating distance between two points on the map using
   POST /getDistance
   Content-Type: application/json
   
-  {
-      "address": "Москва, Красная площадь, 1"
-  }
+  ["Москва, Красная площадь, 1"]
   ```
   Query parameters:
   - `measureType` (optional): KM, M, CENTIMETER (default: KM)
